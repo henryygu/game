@@ -1,82 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Drinking Game</title>
+  <style>
+    input[type="text"] {
+      margin-bottom: 10px;
+    }
+    button {
+      margin-right: 10px;
+    }
+    #next-player, #next-activity {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <h1>Drinking Game</h1>
-
   <form id="player-form">
-    <label for="player-input">Enter player names, separated by commas:</label>
-    <input type="text" id="player-input" name="players">
-    <button type="submit">Start Game</button>
+    <label for="player">Enter player name:</label>
+    <input type="text" id="player" name="player">
+    <button type="button" id="add-player">Add Player</button>
+    <button type="button" id="start-game">Start Game</button>
   </form>
-
-  <div id="game-board" style="display: none;">
-    <div>
-      <h2>Current Player:</h2>
-      <p id="current-player"></p>
-    </div>
-
-    <div>
-      <h2>Activity:</h2>
-      <p id="activity"></p>
-    </div>
-
-    <button id="next-button">Next Player</button>
-  </div>
-
+  <h2>Current player: <span id="current-player"></span></h2>
+  <h2>Activity: <span id="activity"></span></h2>
+  <button type="button" id="next-player">Next Player</button>
   <script>
-    const playerForm = document.querySelector('#player-form');
-    const gameBoard = document.querySelector('#game-board');
-    const currentPlayerElement = document.querySelector('#current-player');
-    const activityElement = document.querySelector('#activity');
-    const nextButton = document.querySelector('#next-button');
+    const playerForm = document.getElementById('player-form');
+    const addPlayerButton = document.getElementById('add-player');
+    const startGameButton = document.getElementById('start-game');
+    const nextPlayerButton = document.getElementById('next-player');
+    const currentPlayerElement = document.getElementById('current-player');
+    const activityElement = document.getElementById('activity');
 
-    let players;
+    const players = [];
 
-    playerForm.addEventListener('submit', function(event) {
-      event.preventDefault();
+    addPlayerButton.addEventListener('click', () => {
+      const playerInput = document.getElementById('player');
+      const player = playerInput.value.trim();
+      if (player !== '') {
+        players.push(player);
+        playerInput.value = '';
+        playerInput.focus();
+      }
+    });
 
-      const playersInput = document.querySelector('#player-input').value;
-      players = playersInput.split(',');
-      players.forEach(function(player, index) {
-        players[index] = player.trim();
-      });
-
-      if (players.length < 2) {
-        alert('You must enter at least 2 players!');
+    startGameButton.addEventListener('click', () => {
+      if (players.length === 0) {
+        alert('Please add at least one player.');
         return;
       }
 
-      currentPlayerElement.textContent = players[0];
-      activityElement.textContent = selectRandomActivity();
-      gameBoard.style.display = 'block';
-      playerForm.style.display = 'none';
+      let currentPlayerIndex = -1;
+
+      addPlayerButton.disabled = true;
+      startGameButton.disabled = true;
+      nextPlayerButton.style.display = 'block';
+
+      currentPlayerElement.textContent = 'Waiting for first player...';
+      activityElement.textContent = '';
+
+      nextPlayerButton.addEventListener('click', () => {
+        currentPlayerIndex++;
+        if (currentPlayerIndex >= players.length) {
+          currentPlayerIndex = 0;
+        }
+
+        currentPlayerElement.textContent = players[currentPlayerIndex];
+
+        const activities = [
+          'Take a sip',
+          'Give a sip to the person on your left',
+          'Give a sip to the person on your right',
+          'Do a dance',
+          'Sing a song',
+          'Tell a joke',
+          'Take two sips',
+          'Pick someone to take a sip',
+          'Skip your turn'
+        ];
+
+        const activityIndex = Math.floor(Math.random() * activities.length);
+        activityElement.textContent = activities[activityIndex];
+      });
     });
-
-    const activities = ['Take a drink', 'Do a dance', 'Tell a joke'];
-    let currentPlayerIndex = 0;
-
-    function getRandomIndex(array) {
-      return Math.floor(Math.random() * array.length);
-    }
-
-    function selectRandomActivity() {
-      const index = getRandomIndex(activities);
-      return activities[index];
-    }
-
-    function nextPlayer() {
-      currentPlayerIndex++;
-      if (currentPlayerIndex >= players.length) {
-        currentPlayerIndex = 0;
-      }
-      currentPlayerElement.textContent = players[currentPlayerIndex];
-      activityElement.textContent = selectRandomActivity();
-    }
-
-    nextButton.addEventListener('click', nextPlayer);
   </script>
 </body>
 </html>
