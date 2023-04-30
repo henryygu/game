@@ -4,15 +4,82 @@
   <meta charset="UTF-8">
   <title>Drinking Game</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      margin: 0;
+      padding: 0;
+    }
+    #container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 36px;
+      text-align: center;
+      margin: 0 0 20px;
+    }
+    h2 {
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+    label {
+      display: block;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
     input[type="text"] {
+      font-size: 18px;
+      padding: 5px;
+      text-align: center;
+      border-radius: 5px;
+      border: none;
       margin-bottom: 10px;
+      width: 100%;
     }
     button {
-      margin-right: 10px;
+      font-size: 18px;
+      
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+      background-color: #0062cc;
+    }
+    button:disabled {
+      background-color: #c0c0c0;
+      cursor: not-allowed;
     }
     #next-player, #next-activity {
       display: none;
     }
+    #current-player {
+      font-weight: bold;
+      display: none;
+    }
+    #activity {
+      background-color: #ffcc00;
+      border: 2px solid #000;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+      display: none;
+}
   </style>
 </head>
 <body>
@@ -58,6 +125,13 @@
       startGameButton.disabled = true;
       nextPlayerButton.style.display = 'block';
 
+      currentPlayerElement.style.display = 'block'; // show the currentPlayerElement
+      activityElement.style.display = 'block'; // show the activityElement
+
+      // hide the player form and start game button
+      playerForm.style.display = 'none';
+      startGameButton.style.display = 'none';
+      
       currentPlayerElement.textContent = 'Waiting for first player...';
       activityElement.textContent = '';
 
@@ -67,7 +141,8 @@
           currentPlayerIndex = 0;
         }
 
-        currentPlayerElement.textContent = players[currentPlayerIndex];
+        currentPlayerElement.textContent = `${players[currentPlayerIndex]} (Player ${currentPlayerIndex + 1} of ${players.length})`;
+
 
         const activities = [
           'Take a sip',
