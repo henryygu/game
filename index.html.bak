@@ -79,20 +79,7 @@
       padding: 10px;
       margin-top: 20px;
       display: none;
-    }
-    #player-list {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin: 0;
-      padding: 0;
-    }
-    
-    #player-list li {
-      list-style: none;
-      margin: 5px 0;
-    }
-
+}
   </style>
 </head>
 <body>
@@ -106,13 +93,6 @@
   <h2>Current player: <span id="current-player"></span></h2>
   <h2>Activity: <span id="activity"></span></h2>
   <button type="button" id="next-player">Next Player</button>
-  <div style="position: fixed; top: 0; right: 5;">
-    <h3>Players</h3>
-    <ul id="player-list"></ul>
-  </div>
-
-
-
   <script>
     const playerForm = document.getElementById('player-form');
     const addPlayerButton = document.getElementById('add-player');
@@ -123,13 +103,14 @@
     const playerListElement = document.getElementById('player-list');
     const players = [];
 
-    function displayPlayers() {
-      let playerList = '';
-      for (let i = 0; i < players.length; i++) {
-        playerList += `${i + 1}. ${players[i]}\n`;
-      }
-      playerListElement.textContent = playerList;
-    }
+
+		  function updatePlayerList() {
+		let playerListHTML = '';
+		for (let i = 0; i < players.length; i++) {
+		  playerListHTML += `<li>Player ${i + 1}: ${players[i]}</li>`;
+		}
+		playerListElement.innerHTML = playerListHTML;
+	  }
 
     addPlayerButton.addEventListener('click', () => {
       const playerInput = document.getElementById('player');
@@ -138,7 +119,6 @@
         players.push(player);
         playerInput.value = '';
         playerInput.focus();
-        displayPlayers();
       }
     });
 	
@@ -160,7 +140,7 @@
       // hide the player form and start game button
       playerForm.style.display = 'none';
       startGameButton.style.display = 'none';
-
+         updatePlayerList();
 
       currentPlayerElement.textContent = 'Waiting for first player...';
       activityElement.textContent = '';
@@ -185,7 +165,5 @@
       });
     });
   </script>
-  
-
 </body>
 </html>
